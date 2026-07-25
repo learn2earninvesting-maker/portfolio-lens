@@ -1,0 +1,263 @@
+{
+ "_meta": {
+  "generated": "2026-07-25",
+  "note": "Seed snapshot of real sourced values. The nightly job overwrites/extends this from Yahoo Finance. Missing fields render as NOT DISCLOSED in the app.",
+  "fields": "ema200 (200-day EMA), pe, roe(%), de(debt/equity), salesCagr(%), promoter(%)",
+  "count": 29
+ },
+ "SANSERA": {
+  "ema200": 1740,
+  "pe": 42.5,
+  "roe": 12,
+  "de": 0.11,
+  "salesCagr": 21,
+  "promoter": 30.1,
+  "src": "seed 25-Jul-26 (Screener/Dhan/5paisa)"
+ },
+ "NH": {
+  "ema200": 1817,
+  "pe": 42,
+  "roe": 22,
+  "de": 0.53,
+  "salesCagr": 25,
+  "promoter": 63.3,
+  "src": "seed 25-Jul-26 (Screener/Dhan/5paisa)"
+ },
+ "GOODLUCK": {
+  "ema200": 1050,
+  "pe": 28,
+  "roe": 14,
+  "de": 1.0,
+  "salesCagr": 20,
+  "promoter": 54.0,
+  "src": "seed 25-Jul-26 (Screener/Dhan/5paisa)"
+ },
+ "PRIVISCL": {
+  "ema200": 2907,
+  "pe": 43,
+  "roe": 23,
+  "de": 0.6,
+  "salesCagr": 37,
+  "promoter": 60.6,
+  "src": "seed 25-Jul-26 (Screener/Dhan/5paisa)"
+ },
+ "SAILIFE": {
+  "ema200": 912,
+  "pe": 74,
+  "roe": 15,
+  "de": 0.15,
+  "salesCagr": 18,
+  "promoter": 34.5,
+  "src": "seed 25-Jul-26 (Screener/Dhan/5paisa)"
+ },
+ "GRAVITA": {
+  "ema200": 1655,
+  "pe": 33,
+  "roe": 18,
+  "de": 0.15,
+  "salesCagr": 20,
+  "promoter": 55.9,
+  "src": "seed 25-Jul-26 (Screener/Dhan/5paisa)"
+ },
+ "VENUSPIPES": {
+  "ema200": 1245,
+  "pe": 30,
+  "roe": 17,
+  "de": 0.37,
+  "salesCagr": 25,
+  "promoter": 48.4,
+  "src": "seed 25-Jul-26 (Screener/Dhan/5paisa)"
+ },
+ "CYIENTDLM": {
+  "ema200": 403,
+  "pe": 67,
+  "roe": 7,
+  "de": 0.3,
+  "salesCagr": 34,
+  "src": "seed 25-Jul-26 (Screener/Dhan/5paisa)"
+ },
+ "VISHNU": {
+  "ema200": 500,
+  "pe": 26,
+  "roe": 18,
+  "de": 0.37,
+  "salesCagr": 15,
+  "promoter": 69.2,
+  "src": "seed 25-Jul-26 (Screener/Dhan/5paisa)"
+ },
+ "KMEW": {
+  "ema200": 1554,
+  "pe": 76,
+  "roe": 22,
+  "de": 0.2,
+  "salesCagr": 45,
+  "promoter": 53.6,
+  "src": "seed 25-Jul-26 (Screener/Dhan/5paisa)"
+ },
+ "SAREGAMA": {
+  "ema200": 395,
+  "pe": 40,
+  "roe": 13,
+  "de": 0.0,
+  "salesCagr": 15,
+  "promoter": 60.0,
+  "src": "seed 25-Jul-26 (Screener/Dhan/5paisa)"
+ },
+ "SHILPAMED": {
+  "ema200": 388,
+  "pe": 48,
+  "roe": 3.4,
+  "de": 0.25,
+  "salesCagr": 7,
+  "promoter": 40.1,
+  "src": "seed 25-Jul-26 (Screener/Dhan/5paisa)"
+ },
+ "SBCL": {
+  "ema200": 485,
+  "pe": 38,
+  "roe": 21,
+  "de": 0.08,
+  "salesCagr": 18,
+  "promoter": 33.4,
+  "src": "seed 25-Jul-26 (Screener/Dhan/5paisa)"
+ },
+ "MOTILALOFS": {
+  "ema200": 700,
+  "pe": 26,
+  "roe": 24,
+  "salesCagr": 17,
+  "promoter": 67.2,
+  "src": "seed 25-Jul-26 (Screener/Dhan/5paisa)"
+ },
+ "CONCORDBIO": {
+  "ema200": 1360,
+  "pe": 45,
+  "roe": 15,
+  "de": 0.0,
+  "salesCagr": 11,
+  "promoter": 44.1,
+  "src": "seed 25-Jul-26 (Screener/Dhan/5paisa)"
+ },
+ "AARTIPHARM": {
+  "ema200": 774,
+  "pe": 32,
+  "roe": 12,
+  "de": 0.05,
+  "salesCagr": 14,
+  "promoter": 42.9,
+  "src": "seed 25-Jul-26 (Screener/Dhan/5paisa)"
+ },
+ "ASTRAMICRO": {
+  "ema200": 1036,
+  "pe": 83,
+  "roe": 14,
+  "de": 0.05,
+  "salesCagr": 46,
+  "promoter": 6.5,
+  "src": "seed 25-Jul-26 (Screener/Dhan/5paisa)"
+ },
+ "RATEGAIN": {
+  "ema200": 600,
+  "pe": 37,
+  "roe": 13,
+  "de": 0.01,
+  "salesCagr": 20,
+  "promoter": 48.8,
+  "src": "seed 25-Jul-26 (Screener/Dhan/5paisa)"
+ },
+ "VIYASH": {
+  "ema200": 220,
+  "pe": 66,
+  "roe": 9,
+  "de": 0.2,
+  "salesCagr": 14,
+  "promoter": 61.3,
+  "src": "seed 25-Jul-26 (Screener/Dhan/5paisa)"
+ },
+ "ENTERO": {
+  "ema200": 1137,
+  "pe": 36,
+  "roe": 6,
+  "de": 0.2,
+  "salesCagr": 20,
+  "promoter": 52.4,
+  "src": "seed 25-Jul-26 (Screener/Dhan/5paisa)"
+ },
+ "UFBL": {
+  "ema200": 300,
+  "de": 2.06,
+  "salesCagr": -6,
+  "promoter": 34.6,
+  "src": "seed 25-Jul-26 (Screener/Dhan/5paisa)"
+ },
+ "TDPOWERSYS": {
+  "ema200": 866,
+  "pe": 80,
+  "roe": 19,
+  "de": 0.02,
+  "salesCagr": 46,
+  "promoter": 26.9,
+  "src": "seed 25-Jul-26 (Screener/Dhan/5paisa)"
+ },
+ "TIMETECHNO": {
+  "ema200": 201,
+  "pe": 26,
+  "roe": 14,
+  "de": 0.25,
+  "salesCagr": 8,
+  "promoter": 48.0,
+  "src": "seed 25-Jul-26 (Screener/Dhan/5paisa)"
+ },
+ "COFORGE": {
+  "ema200": 1510,
+  "pe": 48,
+  "roe": 14,
+  "de": 0.11,
+  "salesCagr": 24,
+  "promoter": 0.0,
+  "src": "seed 25-Jul-26 (Screener/Dhan/5paisa)"
+ },
+ "HBLENGINE": {
+  "ema200": 809,
+  "pe": 25,
+  "roe": 20,
+  "de": 0.0,
+  "salesCagr": 25,
+  "promoter": 59.1,
+  "src": "seed 25-Jul-26 (Screener/Dhan/5paisa)"
+ },
+ "PAYTM": {
+  "ema200": 1165,
+  "pe": 145,
+  "roe": 5,
+  "de": 0.05,
+  "salesCagr": 22,
+  "promoter": 0.0,
+  "src": "seed 25-Jul-26 (Screener/Dhan/5paisa)"
+ },
+ "HINDZINC": {
+  "ema200": 563,
+  "pe": 18,
+  "roe": 40,
+  "de": 0.6,
+  "salesCagr": 8,
+  "promoter": 60.7,
+  "src": "seed 25-Jul-26 (Screener/Dhan/5paisa)"
+ },
+ "JSFB": {
+  "ema200": 431,
+  "pe": 15,
+  "roe": 11,
+  "salesCagr": 12,
+  "promoter": 22.0,
+  "src": "seed 25-Jul-26 (Screener/Dhan/5paisa)"
+ },
+ "IDEAFORGE": {
+  "ema200": 469,
+  "roe": -10,
+  "de": 0.0,
+  "salesCagr": -47,
+  "promoter": 29.0,
+  "src": "seed 25-Jul-26 (Screener/Dhan/5paisa)"
+ }
+}

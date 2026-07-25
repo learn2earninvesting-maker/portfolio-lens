@@ -1,0 +1,36 @@
+# Portfolio Lens universe — one NSE base symbol per line.
+# The nightly job fetches 200-EMA + PE/ROE/D-E/growth for each.
+# Symbols not listed here simply show NOT DISCLOSED in the app's Quality tab.
+# To broaden coverage for the public tool, paste NIFTY-500 constituents below
+# (plain NSE symbols, e.g. RELIANCE, TCS, INFY). ~500 names ≈ 12 min/run.
+
+# --- seeded from your holdings (real sourced values) ---
+AARTIPHARM
+ASTRAMICRO
+COFORGE
+CONCORDBIO
+CYIENTDLM
+ENTERO
+GOODLUCK
+GRAVITA
+HBLENGINE
+HINDZINC
+IDEAFORGE
+JSFB
+KMEW
+MOTILALOFS
+NH
+PAYTM
+PRIVISCL
+RATEGAIN
+SAILIFE
+SANSERA
+SAREGAMA
+SBCL
+SHILPAMED
+TDPOWERSYS
+TIMETECHNO
+UFBL
+VENUSPIPES
+VISHNU
+VIYASH

@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Portfolio Lens — upload any broker's holdings</title>
+<meta name="description" content="Upload a holdings file from any Indian brokerage and see allocation, concentration, sector exposure and P&L. Runs entirely in your browser — nothing is uploaded."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+ --bg:#04080f; --panel:#0a1119; --panel-2:#0d1826;
+ --accent:#f0a500; --accent-soft:#f0a50022;
+ --text:#e8eef5; --muted:#8a97a6; --line:#16212e;
+ --good:#3ecf8e; --warn:#f0a500; --bad:#ff5c5c; --info:#5c9dff;
+ --above:#3ecf8e; --below:#ff5c5c; --above-soft:#3ecf8e1a; --below-soft:#ff5c5c1a;
+ --core:#3ecf8e; --solid:#8fd14f; --watch:#f0a500; --weak:#ff5c5c;
+ --font-head:'Syne',sans-serif; --font-body:'DM Sans',sans-serif; --font-mono:'JetBrains Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--text);font-family:var(--font-body);-webkit-font-smoothing:antialiased}
+body{padding-bottom:78px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 14px}
+a{color:var(--accent)}
+button{font-family:inherit}
+/* header */
+header{position:sticky;top:0;z-index:40;background:linear-gradient(180deg,#04080f 72%,#04080fdd);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.hd{display:flex;align-items:center;gap:10px;padding:12px 0;flex-wrap:wrap}
+.brand{display:flex;align-items:baseline;gap:8px}
+.brand .lens{font-family:var(--font-head);font-weight:800;font-size:18px;letter-spacing:.3px}
+.brand .lens b{color:var(--accent)}
+.brand .tag{font-family:var(--font-mono);font-size:10.5px;color:var(--muted)}
+.privacy{margin-left:auto;font-family:var(--font-mono);font-size:10.5px;color:var(--good);border:1px solid #3ecf8e44;background:#3ecf8e10;padding:5px 10px;border-radius:20px;white-space:nowrap}
+.pnlchip{font-family:var(--font-mono);font-weight:500;font-size:13px;padding:6px 11px;border-radius:9px;border:1px solid}
+.pnlchip.up{color:var(--good);border-color:#3ecf8e55;background:#3ecf8e12}
+.pnlchip.dn{color:var(--bad);border-color:#ff5c5c55;background:#ff5c5c12}
+.pnlchip.na{color:var(--muted);border-color:var(--line)}
+.reset{background:none;border:1px solid var(--line);color:var(--muted);font-size:11px;padding:6px 11px;border-radius:9px;cursor:pointer}
+.reset:hover{color:var(--text);border-color:var(--accent)}
+.toptabs{display:none;gap:2px;border-bottom:1px solid var(--line);overflow-x:auto}
+.toptabs button{background:none;border:none;color:var(--muted);font-weight:600;font-size:13.5px;padding:11px 14px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+.toptabs button.on{color:var(--accent);border-bottom-color:var(--accent)}
+/* bottom nav */
+nav.bn{position:fixed;bottom:0;left:0;right:0;z-index:50;display:flex;background:var(--panel);border-top:1px solid var(--line)}
+nav.bn button{flex:1;background:none;border:none;color:var(--muted);padding:9px 2px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;font-weight:600}
+nav.bn button svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.9}
+nav.bn button.on{color:var(--accent)}
+main{padding-top:18px}
+/* landing */
+.hero{padding:34px 0 8px}
+.hero h1{font-family:var(--font-head);font-weight:800;font-size:clamp(28px,6vw,44px);line-height:1.05;letter-spacing:-.5px}
+.hero h1 .amber{color:var(--accent)}
+.hero p.sub{color:var(--muted);font-size:15.5px;line-height:1.6;margin-top:14px;max-width:640px}
+.drop{margin-top:26px;border:1.5px dashed var(--line);border-radius:18px;background:var(--panel);padding:40px 24px;text-align:center;cursor:pointer;transition:.15s}
+.drop:hover,.drop.over{border-color:var(--accent);background:var(--accent-soft)}
+.drop .ic{width:44px;height:44px;margin:0 auto 14px;stroke:var(--accent);fill:none;stroke-width:1.6}
+.drop .big{font-family:var(--font-head);font-weight:700;font-size:18px}
+.drop .small{color:var(--muted);font-size:13px;margin-top:6px}
+.brokerrow{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-top:16px}
+.bpill{font-family:var(--font-mono);font-size:10.5px;color:var(--muted);border:1px solid var(--line);border-radius:20px;padding:4px 10px}
+.hint{margin-top:22px;display:grid;gap:10px;grid-template-columns:1fr}
+.hcard{border:1px solid var(--line);border-radius:12px;padding:13px 15px;background:var(--panel)}
+.hcard .k{font-family:var(--font-head);font-weight:700;font-size:13px;color:var(--accent)}
+.hcard .v{color:var(--muted);font-size:12.5px;line-height:1.5;margin-top:3px}
+.err{margin-top:16px;border:1px solid #ff5c5c55;background:var(--below-soft);border-radius:12px;padding:13px 15px;font-size:13px;color:#ffd0d0;line-height:1.5}
+/* app sections */
+section{display:none;animation:fade .25s ease}
+section.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+h2.tt{font-family:var(--font-head);font-weight:700;font-size:20px;margin:4px 0 14px}
+h3.st{font-family:var(--font-head);font-weight:700;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin:22px 0 10px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
+.grid{display:grid;gap:12px}
+.heroStats{grid-template-columns:repeat(2,1fr)}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:13px 14px}
+.stat .lab{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;font-weight:600}
+.stat .num{font-family:var(--font-head);font-weight:800;font-size:22px;margin-top:5px;line-height:1.1}
+.stat .subx{font-family:var(--font-mono);font-size:10.5px;color:var(--muted);margin-top:4px}
+.pos{color:var(--good)} .neg{color:var(--bad)}
+.src{font-family:var(--font-mono);font-size:9.5px;color:var(--muted);background:#ffffff08;border:1px solid var(--line);padding:1px 6px;border-radius:20px;display:inline-block}
+.movers{grid-template-columns:1fr 1fr}
+.mv{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line)}
+.mv:last-child{border-bottom:none}
+.mv .tk{font-family:var(--font-mono);font-size:12.5px}
+.mv .vv{font-family:var(--font-mono);font-size:12px;text-align:right}
+.callout{border-radius:12px;padding:12px 14px;font-size:13px;line-height:1.5;border:1px solid}
+.callout.amber{border-color:#f0a50055;background:var(--accent-soft)}
+.callout.green{border-color:#3ecf8e44;background:#3ecf8e10;color:#bfe9d3}
+.callout.info{border-color:#5c9dff44;background:#5c9dff10}
+.callout.muted{border-color:var(--line);background:var(--panel-2);color:var(--muted)}
+.cov{display:flex;flex-wrap:wrap;gap:7px}
+.covpill{font-family:var(--font-mono);font-size:10.5px;padding:4px 9px;border-radius:8px;border:1px solid var(--line);background:#ffffff05}
+.covpill b{color:var(--accent);font-weight:500}
+.covpill.no{border-style:dashed;color:var(--muted)}
+.tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:520px}
+th{font-weight:600;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);text-align:right;padding:11px 10px;border-bottom:1px solid var(--line);cursor:pointer;white-space:nowrap;user-select:none}
+th:first-child,td:first-child{text-align:left;position:sticky;left:0;background:var(--panel)}
+th.so::after{content:' ▾';color:var(--accent)}
+td{padding:10px;border-bottom:1px solid var(--line);text-align:right;font-family:var(--font-mono);white-space:nowrap}
+tr:last-child td{border-bottom:none}
+.tk{font-family:var(--font-mono);font-weight:500}
+.badge{font-family:var(--font-mono);font-size:10px;padding:2px 7px;border-radius:20px;border:1px solid;font-weight:500}
+.b-ok{color:var(--muted);border-color:var(--line)}
+.b-over{color:var(--warn);border-color:#f0a50055;background:var(--accent-soft)}
+.b-conc{color:var(--bad);border-color:#ff5c5c55;background:var(--below-soft)}
+.wbar-row{display:flex;align-items:center;gap:10px;padding:6px 0}
+.wbar-row .tk{width:110px;flex:none;font-size:11.5px;overflow:hidden;text-overflow:ellipsis}
+.wbar{flex:1;height:16px;background:#ffffff08;border-radius:5px;position:relative;overflow:hidden}
+.wbar > i{display:block;height:100%;background:var(--accent);border-radius:5px}
+.wbar.over > i{background:var(--bad)}
+.wbar .band15{position:absolute;top:0;bottom:0;left:15%;border-left:1px dashed #ffffff44}
+.wbar-row .wv{width:48px;text-align:right;font-family:var(--font-mono);font-size:11.5px;flex:none}
+.chartbox{position:relative;height:250px}
+.chartbox.sm{height:220px}
+.nd{color:var(--muted);font-family:var(--font-mono);font-size:11px}
+.mapgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px 18px;font-size:12px}
+.maprow{display:flex;justify-content:space-between;gap:10px;padding:4px 0;border-bottom:1px solid var(--line)}
+.maprow .field{color:var(--muted)}
+.maprow .col{font-family:var(--font-mono);font-size:11.5px}
+.maprow .col.miss{color:var(--bad)}
+footer{color:var(--muted);font-size:11px;line-height:1.6;padding:26px 0 10px;border-top:1px solid var(--line);margin-top:30px}
+footer b{color:var(--muted)}
+@media(min-width:900px){
+ body{padding-bottom:0}
+ nav.bn{display:none}
+ .toptabs{display:flex}
+ .heroStats{grid-template-columns:repeat(5,1fr)}
+ .two{grid-template-columns:1fr 1fr}
+ .hint{grid-template-columns:repeat(3,1fr)}
+}
+</style></head>
+<body>
+<header><div class="wrap">
+ <div class="hd">
+   <span class="brand"><span class="lens">Portfolio&nbsp;<b>Lens</b></span><span class="tag" id="asof"></span></span>
+   <span class="privacy" id="privacyChip">🔒 Runs in your browser · nothing uploaded</span>
+   <span class="pnlchip na" id="pnlchip" style="display:none"></span>
+   <button class="reset" id="resetBtn" style="display:none">Upload another</button>
+ </div>
+ <div class="toptabs" id="toptabs" style="display:none"></div>
+</div></header>
+
+<main class="wrap">
+ <!-- LANDING -->
+ <section id="s-landing" class="on">
+   <div class="hero">
+     <h1>See what your portfolio is <span class="amber">actually made of.</span></h1>
+     <p class="sub">Drop a holdings file from any Indian broker. Portfolio Lens reads it, works out how your money is split, where the risk is concentrated, and how you're doing on P&amp;L — <b style="color:var(--text)">entirely on this device.</b> Your holdings never leave your browser.</p>
+
+     <div class="drop" id="drop" tabindex="0" role="button" aria-label="Upload holdings file">
+       <svg class="ic" viewBox="0 0 24 24"><path d="M12 15V4m0 0l-4 4m4-4l4 4M4 17v2a1 1 0 001 1h14a1 1 0 001-1v-2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+       <div class="big">Drop your holdings file here</div>
+       <div class="small">or tap to choose · .xlsx, .xls or .csv · exported from your broker</div>
+       <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" style="display:none"/>
+     </div>
+     <div class="brokerrow">
+       <span class="bpill">Zerodha Console</span><span class="bpill">Groww</span><span class="bpill">Upstox</span>
+       <span class="bpill">Angel One</span><span class="bpill">ICICI Direct</span><span class="bpill">Kite</span><span class="bpill">any generic sheet</span>
+     </div>
+     <div id="errBox"></div>
+
+     <div class="hint">
+       <div class="hcard"><div class="k">Private by design</div><div class="v">Parsing happens in your browser with JavaScript. No server, no account, no data leaves your device.</div></div>
+       <div class="hcard"><div class="k">Honest about data</div><div class="v">Only what your file contains is used. Anything it doesn't give is shown as <span class="nd">NOT DISCLOSED</span> — never guessed.</div></div>
+       <div class="hcard"><div class="k">Not advice</div><div class="v">Structural, educational analysis of your own sheet. It is not investment advice and no price targets are invented.</div></div>
+     </div>
+   </div>
+ </section>
+
+ <!-- OVERVIEW -->
+ <section id="s-overview"></section>
+ <!-- ALLOCATION -->
+ <section id="s-alloc"></section>
+ <!-- QUALITY -->
+ <section id="s-quality"></section>
+ <!-- HOLDINGS -->
+ <section id="s-holdings"></section>
+
+ <footer id="foot">
+   Portfolio Lens · a client-side tool. Your file is parsed locally in your browser and never uploaded. Figures are computed from the sheet you provide; fundamentals and 200-day EMA are shown only where a data source confirms them, otherwise <b>NOT DISCLOSED</b>. This is structural, educational analysis of your own holdings — <b>not investment advice</b>, and not the recommendation of a SEBI-registered adviser. Markets carry risk; do your own due diligence.
+ </footer>
+</main>
+
+<nav class="bn" id="bnav" style="display:none"></nav>
+
+<script>
+/* ============================================================
+   Portfolio Lens — client-side multi-broker holdings analyzer
+   Structural engines run fully in-browser. Fundamentals/EMA
+   (quality + technical) are pluggable via DATA_FEED_URL below.
+   ============================================================ */
+
+/* Optional: point this at a JSON feed keyed by SYMBOL or ISIN with
+   { "TICKER": {pe,roe,de,salesCagr,promoter,ema200}, ... } to light up
+   the Quality tab. Leave null to run structural-only (anti-fabrication). */
+const DATA_FEED_URL = './data/universe.json';
+
+/* ---------- broker column synonyms (lower-cased, matched by "contains") ---------- */
+const SYN = {
+ symbol:   ['symbol','ticker','instrument','scrip','stock name','stockname','company name','company','security','stock','name'],
+ isin:     ['isin'],
+ sector:   ['sector','industry'],
+ qty:      ['quantity available','qty available','net qty','free qty','quantity','qty.','qty','shares','holding','units','balance'],
+ avg:      ['average price','avg price','avg. cost','avg cost','buy avg','average buy price','avg buy','cost price','purchase price','avg. price','buy price'],
+ cmp:      ['previous closing price','prev close','last price','ltp','cmp','current price','market price','close price','closing price','current market price'],
+ invested: ['invested value','invested','buy value','investment','cost value','total cost'],
+ curval:   ['present value','current value','market value','mkt value','cur. val','cur val','current val','curr value'],
+ pnl:      ['unrealized p&l','unrealised p&l','unrealized p/l','p&l','pnl','profit/loss','profit & loss','net p&l','gain/loss','p/l'],
+ pnlpct:   ['unrealized p&l pct','p&l %','pnl %','p&l%','pnl%','net change %','change %','returns %','return %','p&l pct','%']
+};
+/* words that must NOT be a symbol column even if they contain "name" etc. */
+const AVOID_SYMBOL = ['isin','sector','industry'];
+
+const norm = s => (s==null?'':String(s)).trim().toLowerCase();
+const normSym = s => String(s||'').toUpperCase().trim().replace(/-(T|BE|BZ|GB|IV|N1|N2|RE)$/,'');
+const numify = v => {
+ if(v==null||v==='') return null;
+ if(typeof v==='number') return v;
+ let s=String(v).replace(/[₹,%\s]/g,'').replace(/,/g,'');
+ s=s.replace(/[()]/g, m=> m==='('?'-':''); // (123) => -123
+ const n=parseFloat(s); return isNaN(n)?null:n;
+};
+
+/* find, within a sheet's rows (array of arrays), the header row + column map */
+function detectHeader(rows){
+ let best=null;
+ for(let r=0;r<Math.min(rows.length,40);r++){
+   const cells=rows[r]||[];
+   const map=matchColumns(cells);
+   const score=(map.symbol!=null?2:0)+(map.qty!=null?2:0)+
+     ['avg','cmp','isin','sector','curval','pnl','invested','pnlpct'].reduce((a,k)=>a+(map[k]!=null?1:0),0);
+   if(map.symbol!=null && map.qty!=null && (!best||score>best.score)) best={r,map,score};
+ }
+ return best;
+}
+function matchColumns(cells){
+ const map={}; const used=new Set();
+ const heads=cells.map(norm);
+ // priority: for each field, first exact-ish contains match not already used
+ for(const field of ['isin','sector','qty','avg','cmp','invested','curval','pnl','pnlpct','symbol']){
+   for(const syn of SYN[field]){
+     for(let c=0;c<heads.length;c++){
+       if(used.has(c)) continue;
+       const h=heads[c]; if(!h) continue;
+       if(field==='symbol' && AVOID_SYMBOL.some(a=>h.includes(a))) continue;
+       if(h.includes(syn)){ map[field]=c; used.add(c); break; }
+     }
+     if(map[field]!=null) break;
+   }
+ }
+ return map;
+}
+
+/* ---------- parse a File -> holdings[] ---------- */
+async function parseFile(file){
+ const buf = await file.arrayBuffer();
+ const wb = XLSX.read(buf, {type:'array'});
+ let picked=null;
+ for(const name of wb.SheetNames){
+   const rows = XLSX.utils.sheet_to_json(wb.Sheets[name], {header:1, blankrows:false, defval:''});
+   const det = detectHeader(rows);
+   if(det && (!picked || det.score>picked.det.score)){ picked={sheet:name, rows, det}; }
+ }
+ if(!picked) throw new Error('Could not find a holdings table. The file needs a header row with at least a stock/symbol column and a quantity column.');
+ const {rows, det} = picked; const m=det.map;
+ const out=[];
+ for(let r=det.r+1;r<rows.length;r++){
+   const row=rows[r]||[];
+   const sym = m.symbol!=null ? String(row[m.symbol]||'').trim() : '';
+   if(!sym) continue;
+   const low=sym.toLowerCase();
+   if(['total','grand total','summary','','—'].includes(low)) continue;
+   const qty = m.qty!=null ? numify(row[m.qty]) : null;
+   if(qty==null || qty===0) continue;
+   const avg = m.avg!=null ? numify(row[m.avg]) : null;
+   let cmp = m.cmp!=null ? numify(row[m.cmp]) : null;
+   let invested = m.invested!=null ? numify(row[m.invested]) : null;
+   let curval   = m.curval!=null ? numify(row[m.curval]) : null;
+   let pnl      = m.pnl!=null ? numify(row[m.pnl]) : null;
+   let pnlpct   = m.pnlpct!=null ? numify(row[m.pnlpct]) : null;
+   // derive what we can
+   if(invested==null && avg!=null) invested = qty*avg;
+   if(curval==null && cmp!=null)   curval   = qty*cmp;
+   if(cmp==null && curval!=null && qty) cmp = curval/qty;
+   if(pnl==null && curval!=null && invested!=null) pnl = curval-invested;
+   if(pnlpct==null && pnl!=null && invested) pnlpct = 100*pnl/invested;
+   out.push({
+     symbol:sym.toUpperCase(),
+     sector: (m.sector!=null && row[m.sector]) ? String(row[m.sector]).trim() : 'Unclassified',
+     qty, avg, cmp, invested, curval, pnl, pnlpct
+   });
+ }
+ if(!out.length) throw new Error('Found a header row but no holdings underneath it. Check that the sheet has stock rows with quantities.');
+ return {holdings:out, sheet:picked.sheet, map:m, headerRow:rows[det.r]};
+}
+
+/* ---------- build the analysis model ---------- */
+function buildModel(parsed){
+ const H=parsed.holdings;
+ const anyCur = H.some(h=>h.curval!=null);
+ const totInv = H.reduce((s,h)=>s+(h.invested||0),0);
+ const totCur = anyCur ? H.reduce((s,h)=>s+(h.curval|| h.invested||0),0) : totInv;
+ const basis = anyCur ? 'current' : 'invested';        // weight basis
+ const totBasis = anyCur ? totCur : totInv;
+ H.forEach(h=>{ const v = anyCur ? (h.curval!=null?h.curval:h.invested||0) : (h.invested||0);
+   h.weight = totBasis? +(100*v/totBasis).toFixed(2):0; h._basisVal=v; });
+ H.sort((a,b)=>b.weight-a.weight);
+
+ // sectors
+ const secMap={}; H.forEach(h=>{ secMap[h.sector]=secMap[h.sector]||{v:0,c:0}; secMap[h.sector].v+=h._basisVal; secMap[h.sector].c++; });
+ const sectors=Object.entries(secMap).map(([s,o])=>({sector:s,weight:+(100*o.v/totBasis).toFixed(1),count:o.c})).sort((a,b)=>b.weight-a.weight);
+
+ // concentration
+ const top5=+(H.slice(0,5).reduce((s,h)=>s+h.weight,0)).toFixed(1);
+ const hhi=Math.round(H.reduce((s,h)=>s+h.weight*h.weight,0));
+ const spread = hhi<1000?'well spread':hhi<1800?'moderately concentrated':'highly concentrated';
+
+ // exposure flags
+ const stockFlags=[]; H.forEach(h=>{
+   if(h.weight>20) stockFlags.push({name:h.symbol,weight:h.weight,level:'hard',msg:`${h.symbol} is ${h.weight}% — above the 20% single-stock band; consider trimming to reduce concentration.`});
+   else if(h.weight>15) stockFlags.push({name:h.symbol,weight:h.weight,level:'soft',msg:`${h.symbol} is ${h.weight}% — above the 15% soft band; worth monitoring.`});
+ });
+ const sectorFlags=[]; sectors.forEach(s=>{ if(s.weight>35) sectorFlags.push({sector:s.sector,weight:s.weight,msg:`${s.sector} is ${s.weight}% of the book — heavily exposed to one sector; a drawdown there would hit hard.`}); });
+ const top2=+(sectors.slice(0,2).reduce((s,x)=>s+x.weight,0)).toFixed(1);
+ const clean = !stockFlags.length && !sectorFlags.length && top2<=60;
+
+ const havePnl = H.some(h=>h.pnl!=null);
+ const pnl = havePnl ? +(totCur-totInv).toFixed(0) : null;
+ const pnlPct = (havePnl && totInv) ? +(100*(totCur-totInv)/totInv).toFixed(2) : null;
+
+ return {H,sectors,totInv:Math.round(totInv),totCur:Math.round(totCur),basis,anyCur,
+   top5,hhi,spread,stockFlags,sectorFlags,top2,clean,havePnl,pnl,pnlPct,
+   count:H.length, meta:{sheet:parsed.sheet,map:parsed.map,header:parsed.headerRow}};
+}
+
+/* ---------- quality engine (runs only if fundamentals feed present) ---------- */
+const QW={val:20,prof:18,bs:15,grow:17,prom:10,pnl:10};
+const sVal=pe=>pe==null?null:pe<0?15:pe<20?85:pe<30?70:pe<45?55:pe<60?40:pe<80?28:18;
+const sProf=r=>r==null?null:r<0?12:r<8?28:r<12?42:r<15?55:r<20?68:r<25?80:90;
+const sBs=d=>d==null?null:d<0.1?92:d<0.3?82:d<0.5?70:d<0.8?58:d<1.1?45:32;
+const sGrow=g=>g==null?null:g<0?18:g<6?30:g<12?45:g<20?62:g<30?78:90;
+const sProm=p=>p==null?null:p===0?58:p<30?45:p<45?58:p<60?72:85;
+const sPnl=p=>p==null?null:p<-10?35:p<0?45:p<20?60:p<50?72:85;
+function scoreStock(f,pnlPct){
+ if(!f) return null;
+ const parts=[['val',sVal(f.pe)],['prof',sProf(f.roe)],['bs',sBs(f.de)],['grow',sGrow(f.salesCagr)],['prom',sProm(f.promoter)],['pnl',sPnl(pnlPct)]]
+   .filter(p=>p[1]!=null).map(p=>[p[0],p[1],QW[p[0]]]);
+ if(!parts.length) return null;
+ const tw=parts.reduce((a,p)=>a+p[2],0);
+ const score=Math.round(parts.reduce((a,p)=>a+p[1]*p[2],0)/tw);
+ const n=parts.length, conf=n>=6?'HIGH':n>=4?'MED':'LOW';
+ const band=score>=80?'Core':score>=60?'Solid':score>=40?'Watch':'Weak';
+ return {score,band,conf,parts};
+}
+
+/* ============================================================
+   RENDERING
+   ============================================================ */
+let MODEL=null, FEED=null, CHARTS=[];
+const INRc = n => { if(n==null) return '—'; const a=Math.abs(n); const s=n<0?'-':''; if(a>=1e7)return s+'₹'+(a/1e7).toFixed(2)+'Cr'; if(a>=1e5)return s+'₹'+(a/1e5).toFixed(2)+'L'; return s+'₹'+Math.round(a).toLocaleString('en-IN'); };
+const INR = n => n==null?'—':'₹'+Math.round(n).toLocaleString('en-IN');
+const pct = n => n==null?'—':(n>=0?'+':'')+n.toFixed(1)+'%';
+const bandColor={Core:'var(--core)',Solid:'var(--solid)',Watch:'var(--watch)',Weak:'var(--weak)'};
+const ND='<span class="nd">NOT DISCLOSED</span>';
+function killCharts(){ CHARTS.forEach(c=>{try{c.destroy()}catch(e){}}); CHARTS=[]; }
+Chart.defaults.font.family='DM Sans'; Chart.defaults.color='#8a97a6';
+const PAL=['#f0a500','#5c9dff','#3ecf8e','#8fd14f','#ff5c5c','#b57edc','#4fd6c8','#e8a0bf','#9aa7b4','#d98c3a'];
+
+/* NAV */
+const TABS=[['overview','Overview','M4 12h4l2 6 4-12 2 6h4'],
+ ['alloc','Allocation','M12 3v18 M3 12h18'],
+ ['quality','Quality','M12 3l2.5 5.5 6 .5-4.5 4 1.4 6-5.4-3.2-5.4 3.2 1.4-6-4.5-4 6-.5z'],
+ ['holdings','Holdings','M4 6h16 M4 12h16 M4 18h16']];
+function buildNav(){
+ const bn=document.getElementById('bnav'), tt=document.getElementById('toptabs');
+ bn.innerHTML=''; tt.innerHTML='';
+ TABS.forEach(([id,lab,path])=>{
+   const b=document.createElement('button'); b.dataset.t=id;
+   b.innerHTML=`<svg viewBox="0 0 24 24"><path d="${path}" stroke-linecap="round" stroke-linejoin="round"/></svg><span>${lab}</span>`;
+   b.onclick=()=>go(id); bn.appendChild(b);
+   const b2=document.createElement('button'); b2.dataset.t=id; b2.textContent=lab; b2.onclick=()=>go(id); tt.appendChild(b2);
+ });
+}
+function go(id){
+ document.querySelectorAll('main > section').forEach(s=>s.classList.remove('on'));
+ document.getElementById('s-'+id).classList.add('on');
+ document.querySelectorAll('nav.bn button,.toptabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===id));
+ window.scrollTo(0,0);
+}
+
+function showApp(){
+ document.getElementById('s-landing').classList.remove('on');
+ document.getElementById('bnav').style.display='flex';
+ document.getElementById('toptabs').style.display='flex';
+ document.getElementById('resetBtn').style.display='inline-block';
+ document.getElementById('privacyChip').style.display='none';
+ const t=MODEL, pc=document.getElementById('pnlchip');
+ pc.style.display='inline-block';
+ if(t.havePnl){ pc.className='pnlchip '+(t.pnl>=0?'up':'dn'); pc.textContent=(t.pnl>=0?'▲ ':'▼ ')+INRc(t.pnl)+'  '+pct(t.pnlPct); }
+ else { pc.className='pnlchip na'; pc.textContent='P&L — needs prices'; }
+ renderAll(); go('overview');
+}
+function reset(){
+ killCharts(); MODEL=null;
+ document.getElementById('bnav').style.display='none';
+ document.getElementById('toptabs').style.display='none';
+ document.getElementById('resetBtn').style.display='none';
+ document.getElementById('privacyChip').style.display='inline-block';
+ document.getElementById('pnlchip').style.display='none';
+ document.getElementById('errBox').innerHTML='';
+ document.getElementById('fileInput').value='';
+ document.querySelectorAll('main > section').forEach(s=>s.classList.remove('on'));
+ document.getElementById('s-landing').classList.add('on');
+ window.scrollTo(0,0);
+}
+
+function renderAll(){ killCharts(); overview(); allocation(); quality(); holdings(); }
+
+/* ---- OVERVIEW ---- */
+function overview(){
+ const t=MODEL, H=t.H;
+ const g=H.filter(h=>h.pnlPct!=null).sort((a,b)=>b.pnlPct-a.pnlPct);
+ const gain=g.slice(0,3), lose=g.slice(-3).reverse();
+ const moversPanel = t.havePnl ? `
+   <div class="panel"><h3 class="st" style="margin-top:0">Top movers</h3>
+    <div class="grid movers">
+     <div><div class="nd" style="margin-bottom:4px">GAINERS</div>${gain.map(h=>`<div class="mv"><span class="tk">${h.symbol}</span><span class="vv pos">${pct(h.pnlPct)}<br><span class="nd">${INRc(h.pnl)}</span></span></div>`).join('')||'<div class="nd">—</div>'}</div>
+     <div><div class="nd" style="margin-bottom:4px">LAGGARDS</div>${lose.map(h=>`<div class="mv"><span class="tk">${h.symbol}</span><span class="vv neg">${pct(h.pnlPct)}<br><span class="nd">${INRc(h.pnl)}</span></span></div>`).join('')||'<div class="nd">—</div>'}</div>
+    </div></div>`
+   : `<div class="panel"><h3 class="st" style="margin-top:0">Top movers</h3><div class="callout muted">Your file didn't include current prices or P&amp;L, so gains and losses can't be computed. Allocation below uses <b>invested value</b> instead.</div></div>`;
+
+ document.getElementById('s-overview').innerHTML=`
+ <h2 class="tt">Overview</h2>
+ <div class="grid heroStats">
+   <div class="stat"><div class="lab">Invested</div><div class="num">${INRc(t.totInv)}</div><div class="subx"><span class="src">from sheet</span></div></div>
+   <div class="stat"><div class="lab">Current value</div><div class="num">${t.anyCur?INRc(t.totCur):ND}</div><div class="subx">${t.anyCur?'<span class="src">from sheet</span>':'no prices in file'}</div></div>
+   <div class="stat"><div class="lab">Unrealized P&amp;L</div><div class="num ${t.havePnl?(t.pnl>=0?'pos':'neg'):''}">${t.havePnl?INRc(t.pnl):ND}</div><div class="subx ${t.havePnl?(t.pnl>=0?'pos':'neg'):''}">${t.havePnl?pct(t.pnlPct):'—'}</div></div>
+   <div class="stat"><div class="lab">Holdings</div><div class="num">${t.count}</div><div class="subx">${t.sectors.length} sectors</div></div>
+   <div class="stat"><div class="lab">Concentration</div><div class="num" style="font-size:16px;color:${t.hhi<1000?'var(--good)':t.hhi<1800?'var(--warn)':'var(--bad)'};padding-top:5px">${t.spread}</div><div class="subx">HHI ${t.hhi}</div></div>
+ </div>
+ <div class="grid two" style="margin-top:12px">
+   <div class="panel"><h3 class="st" style="margin-top:0">Allocation by ${t.anyCur?'value':'invested'}</h3><div class="chartbox sm"><canvas id="ovDonut"></canvas></div></div>
+   ${moversPanel}
+ </div>
+ <div class="grid two" style="margin-top:12px">
+   <div class="panel"><h3 class="st" style="margin-top:0">Concentration</h3>
+     <div style="font-size:13px;line-height:1.9">Largest: <b class="tk">${H[0].symbol}</b> at <b>${H[0].weight}%</b><br>Top-5 weight: <b>${t.top5}%</b> &nbsp;·&nbsp; HHI ${t.hhi}<br>Read: <b style="color:${t.hhi<1000?'var(--good)':t.hhi<1800?'var(--warn)':'var(--bad)'}">${t.spread}</b></div>
+     ${t.clean?`<div class="callout green" style="margin-top:12px">No single stock breaches the 15% band and no sector breaches 35%.</div>`:`<div class="callout amber" style="margin-top:12px">${[...t.stockFlags,...t.sectorFlags].length} exposure ${([...t.stockFlags,...t.sectorFlags].length===1?'flag':'flags')} — see Allocation.</div>`}
+   </div>
+   <div class="panel"><h3 class="st" style="margin-top:0">Data coverage</h3>
+     <div class="cov">
+       <span class="covpill"><b>Sheet</b> · qty, avg cost, sector</span>
+       ${t.anyCur?'<span class="covpill"><b>Sheet</b> · prices / value</span>':'<span class="covpill no">no prices → P&amp;L N/D</span>'}
+       ${FEED?'<span class="covpill"><b>Feed</b> · PE / ROE / D-E / EMA</span>':'<span class="covpill no">fundamentals &amp; 200-EMA → NOT DISCLOSED</span>'}
+     </div>
+     <div class="nd" style="margin-top:10px;line-height:1.5">Detected: broker sheet "${t.meta.sheet}". Column mapping is shown on the Holdings tab.</div>
+   </div>
+ </div>`;
+ donut('ovDonut');
+}
+
+/* ---- ALLOCATION ---- */
+function allocation(){
+ const t=MODEL, H=[...MODEL.H];
+ const flag=h=> h.weight>20?'<span class="badge b-conc">CONC &gt;20%</span>':h.weight>15?'<span class="badge b-over">OVER &gt;15%</span>':'<span class="badge b-ok">OK</span>';
+ const rows=H.map(h=>`<tr><td class="tk">${h.symbol}</td><td><b>${h.weight}%</b></td><td>${INRc(h.invested)}</td><td>${h.curval!=null?INRc(h.curval):ND}</td><td class="${h.pnlPct!=null?(h.pnlPct>=0?'pos':'neg'):''}">${h.pnlPct!=null?pct(h.pnlPct):'—'}</td><td>${flag(h)}</td></tr>`).join('');
+ const maxW=Math.max(...H.map(h=>h.weight),1);
+ const bars=H.map(h=>`<div class="wbar-row"><span class="tk" title="${h.symbol}">${h.symbol}</span><div class="wbar ${h.weight>20?'over':''}"><i style="width:${100*h.weight/maxW}%"></i><div class="band15"></div></div><span class="wv">${h.weight}%</span></div>`).join('');
+ const secRows=t.sectors.map(s=>`<tr><td class="tk">${s.sector}</td><td>${s.weight}%</td><td>${s.count}</td><td>${s.weight>35?'<span class="badge b-conc">&gt;35%</span>':'<span class="badge b-ok">OK</span>'}</td></tr>`).join('');
+ const expo = t.clean
+   ? `<div class="callout green">Well spread — no exposure bands breached. Largest stock ${H[0].weight}% (&lt;15%); largest sector ${t.sectors[0].sector} ${t.sectors[0].weight}% (&lt;35%); top-2 sectors ${t.top2}% (&lt;60%).</div>`
+   : [...t.stockFlags.map(f=>`<div class="callout amber">${f.msg}</div>`),...t.sectorFlags.map(f=>`<div class="callout amber">${f.msg}</div>`),(t.top2>60?`<div class="callout amber">Top-2 sectors are ${t.top2}% combined (&gt;60%) — the book leans on two themes.</div>`:'')].join('');
+ document.getElementById('s-alloc').innerHTML=`<h2 class="tt">Allocation &amp; Exposure</h2>
+ <h3 class="st" style="margin-top:0">% holding breakdown</h3>
+ <div class="tblwrap"><table id="allocTbl"><thead><tr><th data-k="symbol">Stock</th><th data-k="weight" class="so">Wt%</th><th data-k="invested">Invested</th><th data-k="curval">Value</th><th data-k="pnlPct">P&amp;L%</th><th>Flag</th></tr></thead><tbody>${rows}</tbody></table></div>
+ <h3 class="st">Weight bars <span class="nd" style="text-transform:none;letter-spacing:0">(dashed = 15% band)</span></h3>
+ <div class="panel">${bars}</div>
+ <div class="grid two" style="margin-top:12px">
+   <div class="panel"><h3 class="st" style="margin-top:0">Sector mix</h3><div class="chartbox sm"><canvas id="secDonut"></canvas></div></div>
+   <div class="panel"><h3 class="st" style="margin-top:0">Sector table</h3><div class="tblwrap"><table style="min-width:0"><thead><tr><th>Sector</th><th>Wt%</th><th>#</th><th>Flag</th></tr></thead><tbody>${secRows}</tbody></table></div></div>
+ </div>
+ <h3 class="st">Over-exposure</h3><div class="grid" style="gap:9px">${expo}</div>
+ <h3 class="st">Concentration</h3>
+ <div class="panel"><div style="display:flex;gap:26px;flex-wrap:wrap;font-size:13px">
+   <div><div class="nd">SINGLE LARGEST</div><div style="font-family:var(--font-head);font-weight:800;font-size:20px">${H[0].weight}%</div></div>
+   <div><div class="nd">TOP-5</div><div style="font-family:var(--font-head);font-weight:800;font-size:20px">${t.top5}%</div></div>
+   <div><div class="nd">HHI</div><div style="font-family:var(--font-head);font-weight:800;font-size:20px">${t.hhi}</div></div>
+   <div><div class="nd">SPREAD</div><div style="font-family:var(--font-head);font-weight:800;font-size:16px;color:${t.hhi<1000?'var(--good)':t.hhi<1800?'var(--warn)':'var(--bad)'};padding-top:3px">${t.spread}</div></div>
+ </div></div>`;
+ secDonut('secDonut');
+ sortable('allocTbl');
+}
+
+/* ---- QUALITY ---- */
+function quality(){
+ const el=document.getElementById('s-quality'), H=MODEL.H;
+ if(!FEED){
+   el.innerHTML=`<h2 class="tt">Quality Scoring</h2>
+   <div class="callout info">Per-stock quality scores need fundamentals — PE, ROE, debt/equity, growth and promoter holding — plus the 200-day EMA for the trend view. Your holdings file doesn't carry those, and a public browser page can't fetch them live from data sites.</div>
+   <div class="panel" style="margin-top:12px">
+     <h3 class="st" style="margin-top:0">What runs here when a data feed is connected</h3>
+     <div style="font-size:13px;line-height:1.7;color:var(--muted)">
+       A 0–100 score per holding (valuation · profitability · balance-sheet · growth · promoter · P&amp;L), banded <b style="color:var(--core)">Core</b> / <b style="color:var(--solid)">Solid</b> / <b style="color:var(--watch)">Watch</b> / <b style="color:var(--weak)">Weak</b>, each carrying a confidence flag, plus an <b>above/below 200-EMA</b> badge. It degrades gracefully: any input that can't be confirmed is shown as ${ND} and dropped from the score — never guessed.
+     </div>
+     <div class="callout muted" style="margin-top:12px">To enable it, set <span class="src">DATA_FEED_URL</span> to a JSON feed keyed by ticker with <span class="src">{pe, roe, de, salesCagr, promoter, ema200}</span>. Until then every ratio is honestly <b>NOT DISCLOSED</b>.</div>
+   </div>`;
+   return;
+ }
+ // feed present → score
+ const scored=H.map(h=>({h,f:FEED[normSym(h.symbol)]||FEED[h.symbol]||FEED[h.isin]||null})).map(x=>({...x,q:scoreStock(x.f,x.h.pnlPct)}));
+ const withScore=scored.filter(x=>x.q).sort((a,b)=>b.q.score-a.q.score);
+ const wsum=withScore.reduce((s,x)=>s+x.h.weight,0);
+ const wq=wsum?(withScore.reduce((s,x)=>s+x.q.score*x.h.weight,0)/wsum).toFixed(1):'—';
+ const mini=q=>{const order=['val','prof','bs','grow','prom','pnl'];const map={};q.parts.forEach(p=>map[p[0]]=p[1]);
+   return '<div style="display:flex;gap:2px;height:16px;align-items:flex-end">'+order.map(k=>{const v=map[k];if(v==null)return '<i style="width:5px;height:3px;background:#22303e;display:block"></i>';const c=v>=70?'var(--good)':v>=50?'var(--solid)':v>=35?'var(--warn)':'var(--bad)';return `<i style="width:5px;height:${Math.max(3,v*0.16)}px;background:${c};display:block;border-radius:1px"></i>`;}).join('')+'</div>';};
+ const tb=(f,k,suf='')=>f&&f[k]!=null?`${f[k]}${suf}`:ND;
+ const emaBadge=(x)=>{const f=x.f; if(!f||f.ema200==null||x.h.cmp==null) return '<span class="badge b-ok">N/D</span>'; const d=100*(x.h.cmp-f.ema200)/f.ema200; return d>=0?`<span class="badge" style="color:var(--above);border-color:#3ecf8e55;background:var(--above-soft)">▲ ${d.toFixed(0)}%</span>`:`<span class="badge" style="color:var(--below);border-color:#ff5c5c55;background:var(--below-soft)">▼ ${d.toFixed(0)}%</span>`;};
+ const rows=withScore.map(x=>`<tr><td class="tk">${x.h.symbol}</td><td><div style="display:flex;gap:8px;align-items:center;justify-content:flex-end"><span style="font-family:var(--font-head);font-weight:800;color:${bandColor[x.q.band]}">${x.q.score}</span>${mini(x.q)}</div></td><td><span class="badge" style="color:${bandColor[x.q.band]};border-color:${bandColor[x.q.band]}55">${x.q.band}</span></td><td class="nd">${x.q.conf}</td><td>${emaBadge(x)}</td><td>${tb(x.f,'pe')}</td><td>${tb(x.f,'roe','%')}</td><td>${tb(x.f,'de')}</td></tr>`).join('');
+ el.innerHTML=`<h2 class="tt">Quality Scoring</h2>
+   <div class="panel"><div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap"><div><div class="nd">WEIGHTED QUALITY</div><div style="font-family:var(--font-head);font-weight:800;font-size:30px;color:var(--solid)">${wq}</div></div><div class="nd" style="flex:1;min-width:180px">Score 0–100 · bands Core/Solid/Watch/Weak · trend vs 200-EMA. Unconfirmed inputs shown NOT DISCLOSED, dropped from the score.</div></div></div>
+   <div class="tblwrap" style="margin-top:12px"><table id="qTbl"><thead><tr><th>Stock</th><th class="so">Score</th><th>Band</th><th>Conf</th><th>200-EMA</th><th>PE</th><th>ROE</th><th>D/E</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+/* ---- HOLDINGS + column-mapping transparency ---- */
+function holdings(){
+ const H=[...MODEL.H], m=MODEL.meta.map, hdr=MODEL.meta.header||[];
+ const fields=[['symbol','Stock / symbol'],['qty','Quantity'],['avg','Average cost'],['cmp','Price / CMP'],['sector','Sector'],['isin','ISIN'],['invested','Invested value'],['curval','Current value'],['pnl','P&L'],['pnlpct','P&L %']];
+ const mapRows=fields.map(([f,lab])=>{const c=m[f]; const col=(c!=null&&hdr[c]!=null&&hdr[c]!=='')?String(hdr[c]):(c!=null?`col ${c+1}`:'not found'); return `<div class="maprow"><span class="field">${lab}</span><span class="col ${c==null?'miss':''}">${c==null?'— derived / N/A':col}</span></div>`;}).join('');
+ const rows=H.map(h=>`<tr><td class="tk">${h.symbol}</td><td>${h.qty}</td><td>${h.avg!=null?INR(h.avg):ND}</td><td>${h.cmp!=null?INR(h.cmp):ND}</td><td style="text-align:left;font-family:var(--font-body);font-size:11px;color:var(--muted)">${h.sector}</td><td><b>${h.weight}%</b></td><td class="${h.pnlPct!=null?(h.pnlPct>=0?'pos':'neg'):''}">${h.pnlPct!=null?pct(h.pnlPct):'—'}</td></tr>`).join('');
+ document.getElementById('s-holdings').innerHTML=`<h2 class="tt">Holdings</h2>
+   <h3 class="st" style="margin-top:0">How your file was read</h3>
+   <div class="panel"><div class="nd" style="margin-bottom:10px;line-height:1.5">Detected the "<b style="color:var(--text)">${MODEL.meta.sheet}</b>" sheet. Here's which of your columns mapped to each field — check it looks right.</div><div class="mapgrid">${mapRows}</div></div>
+   <h3 class="st">All holdings</h3>
+   <div class="tblwrap"><table id="hTbl"><thead><tr><th>Stock</th><th>Qty</th><th>Avg</th><th>CMP</th><th style="text-align:left">Sector</th><th>Wt%</th><th>P&amp;L%</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+/* ---- charts ---- */
+function donut(id){
+ const H=[...MODEL.H]; const top=H.slice(0,8), rest=+(H.slice(8).reduce((s,h)=>s+h.weight,0)).toFixed(1);
+ const labels=top.map(h=>h.symbol).concat(rest>0?['Others']:[]), data=top.map(h=>h.weight).concat(rest>0?[rest]:[]);
+ CHARTS.push(new Chart(document.getElementById(id),{type:'doughnut',data:{labels,datasets:[{data,backgroundColor:PAL.concat(['#33414f']),borderColor:'#04080f',borderWidth:2}]},options:{maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'right',labels:{boxWidth:10,font:{size:10.5},padding:6}},tooltip:{backgroundColor:'#0d1826',borderColor:'#f0a500',borderWidth:1,callbacks:{label:c=>` ${c.label}: ${c.parsed}%`}}}}}));
+}
+function secDonut(id){
+ CHARTS.push(new Chart(document.getElementById(id),{type:'doughnut',data:{labels:MODEL.sectors.map(s=>s.sector),datasets:[{data:MODEL.sectors.map(s=>s.weight),backgroundColor:PAL.concat(PAL),borderColor:'#04080f',borderWidth:2}]},options:{maintainAspectRatio:false,cutout:'58%',plugins:{legend:{position:'right',labels:{boxWidth:10,font:{size:9.5},padding:5}},tooltip:{backgroundColor:'#0d1826',borderColor:'#f0a500',borderWidth:1,callbacks:{label:c=>` ${c.label}: ${c.parsed}%`}}}}}));
+}
+/* ---- sortable ---- */
+function sortable(id){
+ const table=document.getElementById(id); if(!table)return;
+ const ths=table.querySelectorAll('th[data-k]'); let cur='weight',dir=-1;
+ ths.forEach(th=>th.addEventListener('click',()=>{
+   const k=th.dataset.k; dir=(cur===k)?-dir:-1; cur=k;
+   ths.forEach(x=>x.classList.remove('so')); th.classList.add('so');
+   const data=[...MODEL.H].sort((a,b)=>{let va=a[k],vb=b[k]; if(va==null)va=-1e15; if(vb==null)vb=-1e15; if(typeof va==='string')return dir*va.localeCompare(vb); return dir*(va-vb);});
+   const flag=h=> h.weight>20?'<span class="badge b-conc">CONC &gt;20%</span>':h.weight>15?'<span class="badge b-over">OVER &gt;15%</span>':'<span class="badge b-ok">OK</span>';
+   table.querySelector('tbody').innerHTML=data.map(h=>`<tr><td class="tk">${h.symbol}</td><td><b>${h.weight}%</b></td><td>${INRc(h.invested)}</td><td>${h.curval!=null?INRc(h.curval):ND}</td><td class="${h.pnlPct!=null?(h.pnlPct>=0?'pos':'neg'):''}">${h.pnlPct!=null?pct(h.pnlPct):'—'}</td><td>${flag(h)}</td></tr>`).join('');
+ }));
+}
+
+/* ============================================================
+   FILE INTAKE
+   ============================================================ */
+async function handleFile(file){
+ const err=document.getElementById('errBox'); err.innerHTML='';
+ if(!file) return;
+ const ok=/\.(xlsx|xls|csv)$/i.test(file.name);
+ if(!ok){ err.innerHTML=`<div class="err">That's a ${file.name.split('.').pop().toUpperCase()} file. Please upload an <b>.xlsx</b>, <b>.xls</b> or <b>.csv</b> holdings export from your broker.</div>`; return; }
+ try{
+   const parsed=await parseFile(file);
+   MODEL=buildModel(parsed);
+   if(DATA_FEED_URL){ try{ FEED=await (await fetch(DATA_FEED_URL)).json(); if(FEED) delete FEED._meta; }catch(e){ FEED=null; } }
+   showApp();
+ }catch(e){
+   err.innerHTML=`<div class="err"><b>Couldn't read that file.</b> ${e.message} <br><span style="color:var(--muted)">Tip: export the holdings/positions sheet directly from your broker without editing the header row.</span></div>`;
+ }
+}
+const drop=document.getElementById('drop'), input=document.getElementById('fileInput');
+drop.onclick=()=>input.click();
+drop.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();input.click();}};
+input.onchange=e=>handleFile(e.target.files[0]);
+['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('over');}));
+['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('over');}));
+drop.addEventListener('drop',e=>{const f=e.dataTransfer.files[0]; if(f) handleFile(f);});
+document.getElementById('resetBtn').onclick=reset;
+buildNav();
+document.getElementById('asof').textContent='';
+</script>
+</body></html>
