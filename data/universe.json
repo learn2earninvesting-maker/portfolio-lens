@@ -1,6 +1,6 @@
 {
  "_meta": {
-  "generated": "2026-10-06T01:52:50Z",
+  "generated": "2026-10-07T00:59:28Z",
   "count": 29,
   "fresh": 29,
   "stale": 0,
@@ -8,13 +8,13 @@
   "source": "Yahoo Finance (query1/query2). Educational use."
  },
  "AARTIPHARM": {
-  "ema200": 769.97,
+  "ema200": 772.01,
   "pe": 32,
   "roe": 12,
   "de": 0.05,
   "salesCagr": 14,
   "promoter": 42.9,
-  "src": "Yahoo NS 2026-10-06"
+  "src": "Yahoo NS 2026-10-07"
  },
  "ASTRAMICRO": {
   "ema200": 1358.47,
@@ -23,42 +23,42 @@
   "de": 0.05,
   "salesCagr": 46,
   "promoter": 6.5,
-  "src": "Yahoo NS 2026-10-06"
+  "src": "Yahoo NS 2026-10-07"
  },
  "COFORGE": {
-  "ema200": 1639.75,
+  "ema200": 1641.84,
   "pe": 48,
   "roe": 14,
   "de": 0.11,
   "salesCagr": 24,
   "promoter": 0.0,
-  "src": "Yahoo NS 2026-10-06"
+  "src": "Yahoo NS 2026-10-07"
  },
  "CONCORDBIO": {
-  "ema200": 1344.39,
+  "ema200": 1344.63,
   "pe": 45,
   "roe": 15,
   "de": 0.0,
   "salesCagr": 11,
   "promoter": 44.1,
-  "src": "Yahoo NS 2026-10-06"
+  "src": "Yahoo NS 2026-10-07"
  },
  "CYIENTDLM": {
-  "ema200": 577.53,
+  "ema200": 581.13,
   "pe": 67,
   "roe": 7,
   "de": 0.3,
   "salesCagr": 34,
-  "src": "Yahoo NS 2026-10-06"
+  "src": "Yahoo NS 2026-10-07"
  },
  "ENTERO": {
-  "ema200": 1318.17,
+  "ema200": 1321.94,
   "pe": 36,
   "roe": 6,
   "de": 0.2,
   "salesCagr": 20,
   "promoter": 52.4,
-  "src": "Yahoo NS 2026-10-06"
+  "src": "Yahoo NS 2026-10-07"
  },
  "GOODLUCK": {
   "ema200": 441.07,
@@ -67,42 +67,42 @@
   "de": 1.0,
   "salesCagr": 20,
   "promoter": 54.0,
-  "src": "Yahoo NS 2026-10-06"
+  "src": "Yahoo NS 2026-10-07"
  },
  "GRAVITA": {
-  "ema200": 1661.74,
+  "ema200": 1660.14,
   "pe": 33,
   "roe": 18,
   "de": 0.15,
   "salesCagr": 20,
   "promoter": 55.9,
-  "src": "Yahoo NS 2026-10-06"
+  "src": "Yahoo NS 2026-10-07"
  },
  "HBLENGINE": {
-  "ema200": 773.91,
+  "ema200": 773.82,
   "pe": 25,
   "roe": 20,
   "de": 0.0,
   "salesCagr": 25,
   "promoter": 59.1,
-  "src": "Yahoo NS 2026-10-06"
+  "src": "Yahoo NS 2026-10-07"
  },
  "HINDZINC": {
-  "ema200": 571.33,
+  "ema200": 571.19,
   "pe": 18,
   "roe": 40,
   "de": 0.6,
   "salesCagr": 8,
   "promoter": 60.7,
-  "src": "Yahoo NS 2026-10-06"
+  "src": "Yahoo NS 2026-10-07"
  },
  "IDEAFORGE": {
-  "ema200": 655.15,
+  "ema200": 657.07,
   "roe": -10,
   "de": 0.0,
   "salesCagr": -47,
   "promoter": 29.0,
-  "src": "Yahoo NS 2026-10-06"
+  "src": "Yahoo NS 2026-10-07"
  },
  "JSFB": {
   "ema200": 474.12,
@@ -110,60 +110,60 @@
   "roe": 11,
   "salesCagr": 12,
   "promoter": 22.0,
-  "src": "Yahoo NS 2026-10-06"
+  "src": "Yahoo NS 2026-10-07"
  },
  "KMEW": {
-  "ema200": 2173.85,
+  "ema200": 2184.08,
   "pe": 76,
   "roe": 22,
   "de": 0.2,
   "salesCagr": 45,
   "promoter": 53.6,
-  "src": "Yahoo NS 2026-10-06"
+  "src": "Yahoo NS 2026-10-07"
  },
  "MOTILALOFS": {
-  "ema200": 905.78,
+  "ema200": 907.53,
   "pe": 26,
   "roe": 24,
   "salesCagr": 17,
   "promoter": 67.2,
-  "src": "Yahoo NS 2026-10-06"
+  "src": "Yahoo NS 2026-10-07"
  },
  "NH": {
-  "ema200": 1859.83,
+  "ema200": 1855.96,
   "pe": 42,
   "roe": 22,
   "de": 0.53,
   "salesCagr": 25,
   "promoter": 63.3,
-  "src": "Yahoo NS 2026-10-06"
+  "src": "Yahoo NS 2026-10-07"
  },
  "PAYTM": {
-  "ema200": 1372.94,
+  "ema200": 1376.13,
   "pe": 145,
   "roe": 5,
   "de": 0.05,
   "salesCagr": 22,
   "promoter": 0.0,
-  "src": "Yahoo NS 2026-10-06"
+  "src": "Yahoo NS 2026-10-07"
  },
  "PRIVISCL": {
-  "ema200": 3257.49,
+  "ema200": 3259.33,
   "pe": 43,
   "roe": 23,
   "de": 0.6,
   "salesCagr": 37,
   "promoter": 60.6,
-  "src": "Yahoo NS 2026-10-06"
+  "src": "Yahoo NS 2026-10-07"
  },
  "RATEGAIN": {
-  "ema200": 756.48,
+  "ema200": 757.4,
   "pe": 37,
   "roe": 13,
   "de": 0.01,
   "salesCagr": 20,
   "promoter": 48.8,
-  "src": "Yahoo NS 2026-10-06"
+  "src": "Yahoo NS 2026-10-07"
  },
  "SAILIFE": {
   "ema200": 1202.37,
@@ -172,7 +172,7 @@
   "de": 0.15,
   "salesCagr": 18,
   "promoter": 34.5,
-  "src": "Yahoo NS 2026-10-06"
+  "src": "Yahoo NS 2026-10-07"
  },
  "SANSERA": {
   "ema200": 2917.5,
@@ -181,34 +181,34 @@
   "de": 0.11,
   "salesCagr": 21,
   "promoter": 30.1,
-  "src": "Yahoo NS 2026-10-06"
+  "src": "Yahoo NS 2026-10-07"
  },
  "SAREGAMA": {
-  "ema200": 435.12,
+  "ema200": 436.99,
   "pe": 40,
   "roe": 13,
   "de": 0.0,
   "salesCagr": 15,
   "promoter": 60.0,
-  "src": "Yahoo NS 2026-10-06"
+  "src": "Yahoo NS 2026-10-07"
  },
  "SBCL": {
-  "ema200": 726.33,
+  "ema200": 736.81,
   "pe": 38,
   "roe": 21,
   "de": 0.08,
   "salesCagr": 18,
   "promoter": 33.4,
-  "src": "Yahoo NS 2026-10-06"
+  "src": "Yahoo NS 2026-10-07"
  },
  "SHILPAMED": {
-  "ema200": 591.45,
+  "ema200": 605.19,
   "pe": 48,
   "roe": 3.4,
   "de": 0.25,
   "salesCagr": 7,
   "promoter": 40.1,
-  "src": "Yahoo NS 2026-10-06"
+  "src": "Yahoo NS 2026-10-07"
  },
  "TDPOWERSYS": {
   "ema200": 563.99,
@@ -217,49 +217,49 @@
   "de": 0.02,
   "salesCagr": 46,
   "promoter": 26.9,
-  "src": "Yahoo NS 2026-10-06"
+  "src": "Yahoo NS 2026-10-07"
  },
  "TIMETECHNO": {
-  "ema200": 188.24,
+  "ema200": 188.19,
   "pe": 26,
   "roe": 14,
   "de": 0.25,
   "salesCagr": 8,
   "promoter": 48.0,
-  "src": "Yahoo NS 2026-10-06"
+  "src": "Yahoo NS 2026-10-07"
  },
  "UFBL": {
-  "ema200": 478.35,
+  "ema200": 480.18,
   "de": 2.06,
   "salesCagr": -6,
   "promoter": 34.6,
-  "src": "Yahoo NS 2026-10-06"
+  "src": "Yahoo NS 2026-10-07"
  },
  "VENUSPIPES": {
-  "ema200": 1495.6,
+  "ema200": 1502.68,
   "pe": 30,
   "roe": 17,
   "de": 0.37,
   "salesCagr": 25,
   "promoter": 48.4,
-  "src": "Yahoo NS 2026-10-06"
+  "src": "Yahoo NS 2026-10-07"
  },
  "VISHNU": {
-  "ema200": 588.1,
+  "ema200": 588.69,
   "pe": 26,
   "roe": 18,
   "de": 0.37,
   "salesCagr": 15,
   "promoter": 69.2,
-  "src": "Yahoo NS 2026-10-06"
+  "src": "Yahoo NS 2026-10-07"
  },
  "VIYASH": {
-  "ema200": 235.88,
+  "ema200": 235.85,
   "pe": 66,
   "roe": 9,
   "de": 0.2,
   "salesCagr": 14,
   "promoter": 61.3,
-  "src": "Yahoo NS 2026-10-06"
+  "src": "Yahoo NS 2026-10-07"
  }
 }
