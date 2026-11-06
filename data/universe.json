@@ -1,6 +1,6 @@
 {
  "_meta": {
-  "generated": "2026-11-05T01:44:53Z",
+  "generated": "2026-11-06T01:46:13Z",
   "count": 29,
   "fresh": 29,
   "stale": 0,
@@ -8,258 +8,258 @@
   "source": "Yahoo Finance (query1/query2). Educational use."
  },
  "AARTIPHARM": {
-  "ema200": 777.15,
+  "ema200": 777.87,
   "pe": 32,
   "roe": 12,
   "de": 0.05,
   "salesCagr": 14,
   "promoter": 42.9,
-  "src": "Yahoo NS 2026-11-05"
+  "src": "Yahoo NS 2026-11-06"
  },
  "ASTRAMICRO": {
-  "ema200": 1362.1,
+  "ema200": 1363.19,
   "pe": 83,
   "roe": 14,
   "de": 0.05,
   "salesCagr": 46,
   "promoter": 6.5,
-  "src": "Yahoo NS 2026-11-05"
+  "src": "Yahoo NS 2026-11-06"
  },
  "COFORGE": {
-  "ema200": 1662.81,
+  "ema200": 1664.9,
   "pe": 48,
   "roe": 14,
   "de": 0.11,
   "salesCagr": 24,
   "promoter": 0.0,
-  "src": "Yahoo NS 2026-11-05"
+  "src": "Yahoo NS 2026-11-06"
  },
  "CONCORDBIO": {
-  "ema200": 655.39,
+  "ema200": 654.68,
   "pe": 45,
   "roe": 15,
   "de": 0.0,
   "salesCagr": 11,
   "promoter": 44.1,
-  "src": "Yahoo NS 2026-11-05"
+  "src": "Yahoo NS 2026-11-06"
  },
  "CYIENTDLM": {
-  "ema200": 602.59,
+  "ema200": 602.94,
   "pe": 67,
   "roe": 7,
   "de": 0.3,
   "salesCagr": 34,
-  "src": "Yahoo NS 2026-11-05"
+  "src": "Yahoo NS 2026-11-06"
  },
  "ENTERO": {
-  "ema200": 1358.34,
+  "ema200": 1360.14,
   "pe": 36,
   "roe": 6,
   "de": 0.2,
   "salesCagr": 20,
   "promoter": 52.4,
-  "src": "Yahoo NS 2026-11-05"
+  "src": "Yahoo NS 2026-11-06"
  },
  "GOODLUCK": {
-  "ema200": 452.86,
+  "ema200": 453.67,
   "pe": 28,
   "roe": 14,
   "de": 1.0,
   "salesCagr": 20,
   "promoter": 54.0,
-  "src": "Yahoo NS 2026-11-05"
+  "src": "Yahoo NS 2026-11-06"
  },
  "GRAVITA": {
-  "ema200": 1618.3,
+  "ema200": 1616.07,
   "pe": 33,
   "roe": 18,
   "de": 0.15,
   "salesCagr": 20,
   "promoter": 55.9,
-  "src": "Yahoo NS 2026-11-05"
+  "src": "Yahoo NS 2026-11-06"
  },
  "HBLENGINE": {
-  "ema200": 772.2,
+  "ema200": 772.49,
   "pe": 25,
   "roe": 20,
   "de": 0.0,
   "salesCagr": 25,
   "promoter": 59.1,
-  "src": "Yahoo NS 2026-11-05"
+  "src": "Yahoo NS 2026-11-06"
  },
  "HINDZINC": {
-  "ema200": 567.44,
+  "ema200": 567.42,
   "pe": 18,
   "roe": 40,
   "de": 0.6,
   "salesCagr": 8,
   "promoter": 60.7,
-  "src": "Yahoo NS 2026-11-05"
+  "src": "Yahoo NS 2026-11-06"
  },
  "IDEAFORGE": {
-  "ema200": 649.58,
+  "ema200": 650.01,
   "roe": -10,
   "de": 0.0,
   "salesCagr": -47,
   "promoter": 29.0,
-  "src": "Yahoo NS 2026-11-05"
+  "src": "Yahoo NS 2026-11-06"
  },
  "JSFB": {
-  "ema200": 457.42,
+  "ema200": 456.45,
   "pe": 15,
   "roe": 11,
   "salesCagr": 12,
   "promoter": 22.0,
-  "src": "Yahoo NS 2026-11-05"
+  "src": "Yahoo NS 2026-11-06"
  },
  "KMEW": {
-  "ema200": 2334.33,
+  "ema200": 2343.06,
   "pe": 76,
   "roe": 22,
   "de": 0.2,
   "salesCagr": 45,
   "promoter": 53.6,
-  "src": "Yahoo NS 2026-11-05"
+  "src": "Yahoo NS 2026-11-06"
  },
  "MOTILALOFS": {
-  "ema200": 910.15,
+  "ema200": 910.16,
   "pe": 26,
   "roe": 24,
   "salesCagr": 17,
   "promoter": 67.2,
-  "src": "Yahoo NS 2026-11-05"
+  "src": "Yahoo NS 2026-11-06"
  },
  "NH": {
-  "ema200": 1835.5,
+  "ema200": 1836.46,
   "pe": 42,
   "roe": 22,
   "de": 0.53,
   "salesCagr": 25,
   "promoter": 63.3,
-  "src": "Yahoo NS 2026-11-05"
+  "src": "Yahoo NS 2026-11-06"
  },
  "PAYTM": {
-  "ema200": 1399.05,
+  "ema200": 1400.7,
   "pe": 145,
   "roe": 5,
   "de": 0.05,
   "salesCagr": 22,
   "promoter": 0.0,
-  "src": "Yahoo NS 2026-11-05"
+  "src": "Yahoo NS 2026-11-06"
  },
  "PRIVISCL": {
-  "ema200": 3273.88,
+  "ema200": 3273.67,
   "pe": 43,
   "roe": 23,
   "de": 0.6,
   "salesCagr": 37,
   "promoter": 60.6,
-  "src": "Yahoo NS 2026-11-05"
+  "src": "Yahoo NS 2026-11-06"
  },
  "RATEGAIN": {
-  "ema200": 752.28,
+  "ema200": 752.08,
   "pe": 37,
   "roe": 13,
   "de": 0.01,
   "salesCagr": 20,
   "promoter": 48.8,
-  "src": "Yahoo NS 2026-11-05"
+  "src": "Yahoo NS 2026-11-06"
  },
  "SAILIFE": {
-  "ema200": 1228.65,
+  "ema200": 1230.96,
   "pe": 74,
   "roe": 15,
   "de": 0.15,
   "salesCagr": 18,
   "promoter": 34.5,
-  "src": "Yahoo NS 2026-11-05"
+  "src": "Yahoo NS 2026-11-06"
  },
  "SANSERA": {
-  "ema200": 3075.05,
+  "ema200": 3086.96,
   "pe": 42.5,
   "roe": 12,
   "de": 0.11,
   "salesCagr": 21,
   "promoter": 30.1,
-  "src": "Yahoo NS 2026-11-05"
+  "src": "Yahoo NS 2026-11-06"
  },
  "SAREGAMA": {
-  "ema200": 437.06,
+  "ema200": 438.6,
   "pe": 40,
   "roe": 13,
   "de": 0.0,
   "salesCagr": 15,
   "promoter": 60.0,
-  "src": "Yahoo NS 2026-11-05"
+  "src": "Yahoo NS 2026-11-06"
  },
  "SBCL": {
-  "ema200": 759.19,
+  "ema200": 761.22,
   "pe": 38,
   "roe": 21,
   "de": 0.08,
   "salesCagr": 18,
   "promoter": 33.4,
-  "src": "Yahoo NS 2026-11-05"
+  "src": "Yahoo NS 2026-11-06"
  },
  "SHILPAMED": {
-  "ema200": 637.77,
+  "ema200": 639.66,
   "pe": 48,
   "roe": 3.4,
   "de": 0.25,
   "salesCagr": 7,
   "promoter": 40.1,
-  "src": "Yahoo NS 2026-11-05"
+  "src": "Yahoo NS 2026-11-06"
  },
  "TDPOWERSYS": {
-  "ema200": 586.13,
+  "ema200": 587.06,
   "pe": 80,
   "roe": 19,
   "de": 0.02,
   "salesCagr": 46,
   "promoter": 26.9,
-  "src": "Yahoo NS 2026-11-05"
+  "src": "Yahoo NS 2026-11-06"
  },
  "TIMETECHNO": {
-  "ema200": 182.56,
+  "ema200": 182.38,
   "pe": 26,
   "roe": 14,
   "de": 0.25,
   "salesCagr": 8,
   "promoter": 48.0,
-  "src": "Yahoo NS 2026-11-05"
+  "src": "Yahoo NS 2026-11-06"
  },
  "UFBL": {
-  "ema200": 491.92,
+  "ema200": 491.93,
   "de": 2.06,
   "salesCagr": -6,
   "promoter": 34.6,
-  "src": "Yahoo NS 2026-11-05"
+  "src": "Yahoo NS 2026-11-06"
  },
  "VENUSPIPES": {
-  "ema200": 1550.69,
+  "ema200": 1552.76,
   "pe": 30,
   "roe": 17,
   "de": 0.37,
   "salesCagr": 25,
   "promoter": 48.4,
-  "src": "Yahoo NS 2026-11-05"
+  "src": "Yahoo NS 2026-11-06"
  },
  "VISHNU": {
-  "ema200": 589.32,
+  "ema200": 588.66,
   "pe": 26,
   "roe": 18,
   "de": 0.37,
   "salesCagr": 15,
   "promoter": 69.2,
-  "src": "Yahoo NS 2026-11-05"
+  "src": "Yahoo NS 2026-11-06"
  },
  "VIYASH": {
-  "ema200": 231.75,
+  "ema200": 231.64,
   "pe": 66,
   "roe": 9,
   "de": 0.2,
   "salesCagr": 14,
   "promoter": 61.3,
-  "src": "Yahoo NS 2026-11-05"
+  "src": "Yahoo NS 2026-11-06"
  }
 }
